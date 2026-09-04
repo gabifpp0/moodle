@@ -1,0 +1,36 @@
+services:
+
+  moodle:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+
+    container_name: moodle_app
+
+    ports:
+      - "${MOODLE_PORT:-8000}:80"
+
+    volumes:
+      - ./moodle:/var/www/html
+
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+
+    container_name: moodle_db
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
