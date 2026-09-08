@@ -23,12 +23,26 @@ RUN apt-get update && apt-get install -y \
         gd \
         soap \
         opcache \
+    && a2enmod rewrite \
+    && docker-php-ext-enable opcache \
+    && printf '%s\n' 'max_input_vars = 5000' > /usr/local/etc/php/conf.d/moodle.ini \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && rm composer-setup.php \
     && sed -ri \
         -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" \
         /etc/apache2/sites-available/*.conf \
         /etc/apache2/apache2.conf \
         /etc/apache2/conf-available/*.conf \
-    && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
+COPY docker/php/moodle-ssl.conf /etc/apache2/sites-available/moodle-ssl.conf
+COPY docker/php/entrypoint.sh /usr/local/bin/moodle-entrypoint
+
 WORKDIR /var/www/html
+
+RUN a2ensite moodle-ssl \
+    && a2dissite 000-default \
+    && chmod +x /usr/local/bin/moodle-entrypoint
+
+ENTRYPOINT ["moodle-entrypoint"]
