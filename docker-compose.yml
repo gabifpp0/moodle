@@ -1,5 +1,4 @@
 services:
-
   moodle:
     build:
       context: .
@@ -10,8 +9,16 @@ services:
     ports:
       - "${MOODLE_PORT:-8000}:80"
 
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      MOODLE_PORT: ${MOODLE_PORT:-8000}
+
     volumes:
-      - ./moodle:/var/www/html
+      - ./:/var/www/html
+      - moodle_data:/var/www/moodledata
 
     depends_on:
       - db
@@ -34,3 +41,4 @@ services:
 
 volumes:
   postgres_data:
+  moodle_data:

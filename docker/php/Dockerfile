@@ -1,5 +1,7 @@
 FROM php:8.3-apache
 
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -21,8 +23,12 @@ RUN apt-get update && apt-get install -y \
         gd \
         soap \
         opcache \
+    && sed -ri \
+        -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" \
+        /etc/apache2/sites-available/*.conf \
+        /etc/apache2/apache2.conf \
+        /etc/apache2/conf-available/*.conf \
+    && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod rewrite
 
 WORKDIR /var/www/html
