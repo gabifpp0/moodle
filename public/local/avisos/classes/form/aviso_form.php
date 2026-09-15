@@ -7,6 +7,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 // aqui vai ficar o formulário do plugin, que é a interface que o usuário vai interagir para criar, editar e excluir os avisos
+// não acessa o banco de dados, apenas define os campos do formulário e valida os dados
 
 class aviso_form extends \moodleform
 {
@@ -14,6 +15,8 @@ class aviso_form extends \moodleform
     {
         $mform = $this->_form;
 
+        //exemplo: cria <input type="hidden" name="id">
+        
         $mform->addElement(
             'hidden',
             'id'

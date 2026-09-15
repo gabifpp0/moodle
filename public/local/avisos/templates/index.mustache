@@ -1,0 +1,33 @@
+{{#hasnotices}}
+
+    {{#notices}}
+        <div class="alert alert-info mb-3">
+            <h3>{{title}}</h3>
+
+            <div>
+                {{{message}}}
+            </div>
+
+            {{#timestart}}
+                <div>
+                    <strong>Início:</strong>
+                    {{timestart}}
+                </div>
+            {{/timestart}}
+
+            {{#timeend}}
+                <div>
+                    <strong>Fim:</strong>
+                    {{timeend}}
+                </div>
+            {{/timeend}}
+        </div>
+    {{/notices}}
+
+{{/hasnotices}}
+
+{{^hasnotices}}
+    <div class="alert alert-secondary">
+        Nenhum aviso disponível no momento.
+    </div>
+{{/hasnotices}}
